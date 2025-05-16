@@ -6,4 +6,4 @@ export default <Partial<Config>>{
     './app/**/*.{js,ts,vue}',
   ],
   plugins: [tailwindTypography]
-}
+} 
