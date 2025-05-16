@@ -42,7 +42,7 @@ export default defineNuxtConfig({
       routes: [
         {
           type: 'case_study',
-          path: '/case-study/:uid',
+          path: '/services/:uid',
         },
         {
           type: 'page',

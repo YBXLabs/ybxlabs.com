@@ -5,7 +5,7 @@ import { components } from "~/slices";
 const prismic = usePrismic();
 const route = useRoute();
 const { data: page } = await useAsyncData(
-  `case-study:${route.params.uid}` as string,
+  `services:${route.params.uid}` as string,
   () => prismic.client.getByUID("case_study", route.params.uid as string)
 );
 
@@ -23,12 +23,12 @@ onMounted(() => {
   ).matches;
 
   if (prefersReducedMotion) {
-    gsap.set(".case-study__image", { opacity: 1 });
+    gsap.set(".services__image", { opacity: 1 });
     return;
   }
 
   gsap.fromTo(
-    ".case-study__image",
+    ".services__image",
     {
       opacity: 0,
       y: 100,
@@ -61,7 +61,7 @@ onMounted(() => {
         <PrismicImage
           v-if="$prismic.isFilled.image(page?.data.cover)"
           :field="page?.data.cover"
-          class="case-study__image rounded-lg opacity-0 max-w-4xl w-full"
+          class="services__image rounded-lg opacity-0 max-w-4xl w-full"
         />
       </header>
       <SliceZone
@@ -72,4 +72,4 @@ onMounted(() => {
       />
     </Bounded>
   </main>
-</template>
+</template> 
