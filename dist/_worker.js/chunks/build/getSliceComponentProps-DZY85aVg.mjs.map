@@ -1,0 +1,1 @@
+{"version":3,"file":"getSliceComponentProps-DZY85aVg.mjs","sources":["../../../../node_modules/@prismicio/vue/dist/SliceZone/getSliceComponentProps.js"],"sourcesContent":null,"names":["getSliceComponentProps","propsHint","slice","type","Object","required","index","Number","slices","Array","context"],"mappings":"","x_google_ignoreList":[0]}

@@ -1,0 +1,2 @@
+import{_ as e}from"./server.mjs";import{a1 as t,C as s,a6 as o,X as n}from"../routes/renderer.mjs";const r={};const a=r.setup;r.setup=(e,t)=>{const s=n();return(s.modules||(s.modules=new Set)).add("components/RichText/GlideText.vue"),a?a(e,t):void 0};const i=Object.assign(e(r,[["ssrRender",function(e,n,r,a){n(`<em${t(s({class:"bg-gradient-to-b from-teal-400 to-sky-400 bg-clip-text not-italic text-transparent"},a))}>`),o(e.$slots,"default",{},null,n,r),n("</em>")}]]),{__name:"RichTextGlideText"});export{i as G};
+//# sourceMappingURL=GlideText-D-CNA7NS.mjs.map

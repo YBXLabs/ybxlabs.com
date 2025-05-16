@@ -32,6 +32,7 @@
     "wrangler": "^3.108.1"
   },
   "dependencies": {
+    "@prismicio/client": "^7.17.2",
     "gsap": "^3.12.7"
   }
 }

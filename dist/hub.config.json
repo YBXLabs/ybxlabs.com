@@ -1,0 +1,14 @@
+{
+  "ai": false,
+  "analytics": false,
+  "blob": false,
+  "browser": false,
+  "cache": false,
+  "database": false,
+  "kv": false,
+  "vectorize": {},
+  "bindings": {
+    "hyperdrive": {}
+  },
+  "nitroPreset": "cloudflare_pages"
+}

@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "include": [
+    "/*"
+  ],
+  "exclude": [
+    "/_fonts/*",
+    "/_nuxt/*",
+    "/.DS_Store",
+    "/favicon.ico",
+    "/hub.config.json",
+    "/assets/gradient.png",
+    "/assets/grid-pattern.png",
+    "/assets/noise-texture.svg",
+    "/assets/pulsing-logo.svg"
+  ]
+}

@@ -1,0 +1,1 @@
+{"version":3,"file":"index.head.mjs","sources":["../../../../../node_modules/@nuxthub/core/dist/runtime/base/server/api/_hub/index.head.js"],"sourcesContent":null,"names":["index_head","eventHandler","async","event","requireNuxtHubAuthorization","sendNoContent"],"mappings":"","x_google_ignoreList":[0]}
