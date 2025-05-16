@@ -10,7 +10,7 @@ export default defineNuxtConfig({
 
   app: {
     head: {
-      title: 'Glide.ai',
+      title: 'YBX Labs',
       htmlAttrs: {
         lang: 'en',
       },
@@ -58,4 +58,11 @@ export default defineNuxtConfig({
   },
 
   compatibilityDate: '2025-01-06',
-})
+  
+  // Add runtime config for head management
+  runtimeConfig: {
+    public: {
+      siteUrl: process.env.NUXT_PUBLIC_SITE_URL || 'http://localhost:3000'
+    }
+  }
+}) 

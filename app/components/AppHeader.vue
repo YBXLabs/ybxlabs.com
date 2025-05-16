@@ -1,9 +1,9 @@
 <script lang="ts" setup>
 import type { Content } from "@prismicio/client";
 
-defineProps<{ settings?: Content.SettingsDocument }>()
+defineProps<{ settings?: Content.SettingsDocument }>();
 
-const isOpen = ref(false)
+const isOpen = ref(false);
 </script>
 
 <template>
@@ -14,7 +14,7 @@ const isOpen = ref(false)
     >
       <div class="flex items-center justify-between">
         <NuxtLink to="/" class="z-50" @click="isOpen = false">
-          <GlideLogo />
+          <YBXLabsLogo />
           <span class="sr-only">{{ settings?.data.site_title }} home page</span>
         </NuxtLink>
 

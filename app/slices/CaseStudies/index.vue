@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { Content } from "@prismicio/client";
 
-const prismic = usePrismic()
+const prismic = usePrismic();
 // The array passed to `getSliceComponentProps` is purely optional.
 // Consider it as a visual hint for you when templating your slice.
 const props = defineProps(
@@ -10,18 +10,23 @@ const props = defineProps(
     "index",
     "slices",
     "context",
-  ]),
+  ])
 );
 
 const caseStudies = computed(() => {
   return props.slice.primary.case_studies
-    .map(item => item.link)
-    .filter((item) => prismic.isFilled.contentRelationship(item)) as unknown as Content.CaseStudyDocument[]
-})
+    .map((item) => item.link)
+    .filter((item) =>
+      prismic.isFilled.contentRelationship(item)
+    ) as unknown as Content.CaseStudyDocument[];
+});
 </script>
 
 <template>
-  <Bounded :data-slice-type="slice.slice_type" :data-slice-variation="slice.variation">
+  <Bounded
+    :data-slice-type="slice.slice_type"
+    :data-slice-variation="slice.variation"
+  >
     <PrismicText
       class="max-w-2xl text-balance text-center text-5xl font-medium md:text-7xl"
       :field="slice.primary.heading"
@@ -50,13 +55,13 @@ const caseStudies = computed(() => {
             :document="caseStudy"
             class="z-10 after:absolute after:inset-0 hover:underline"
           >
-            Read <PrismicText :field="caseStudy.data.company" /> case study
+            Read <PrismicText :field="caseStudy.data.company" />
           </PrismicLink>
         </div>
 
         <div class="relative lg:col-span-2" :class="index % 2 && 'md:-order-1'">
-          <div class="image-glow -bottom-8 -left-4 bg-sky-500"/>
-          <div class="image-glow -right-4 -top-8 bg-teal-500"/>
+          <div class="image-glow -bottom-8 -left-4 bg-sky-500" />
+          <div class="image-glow -right-4 -top-8 bg-teal-500" />
           <PrismicImage
             :field="caseStudy.data.cover"
             class="z-20 scale-[.98] rounded-xl transition-transform duration-300 group-hover:scale-100"

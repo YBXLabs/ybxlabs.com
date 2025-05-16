@@ -1,1 +1,0 @@
-import{_ as t,c as s,o,I as c}from"./CqO8M-4q.js";const n={},a={class:"bg-gradient-to-b from-teal-400 to-sky-400 bg-clip-text not-italic text-transparent"};function r(e,i){return o(),s("em",a,[c(e.$slots,"default")])}const _=Object.assign(t(n,[["render",r]]),{__name:"RichTextGlideText"});export{_ as G};

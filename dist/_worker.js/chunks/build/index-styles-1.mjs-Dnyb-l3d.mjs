@@ -1,2 +1,0 @@
-import{v as a}from"../nitro/nitro.mjs";const t=".grid-background[data-v-2df952c9]{background-image:url("+a("/assets/grid-pattern.png")+");background-position:50%;background-repeat:repeat;top:0;right:0;bottom:0;left:0;-webkit-mask-image:radial-gradient(circle at 60% 50%,#000 10%,transparent 40%);mask-image:radial-gradient(circle at 60% 50%,#000 10%,transparent 40%);opacity:.15;position:absolute;z-index:-1}";export{t as i};
-//# sourceMappingURL=index-styles-1.mjs-Dnyb-l3d.mjs.map
