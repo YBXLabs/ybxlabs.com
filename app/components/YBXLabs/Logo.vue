@@ -1,9 +1,9 @@
 <template>
   <svg
     class="h-9 w-auto"
-    width="539"
+    width="557"
     height="150"
-    viewBox="0 0 539 150"
+    viewBox="0 0 557 150"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
   >
