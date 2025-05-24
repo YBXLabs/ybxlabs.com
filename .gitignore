@@ -1,0 +1,8 @@
+.data
+node_modules
+.nuxt
+.env
+.env.local
+.env.development
+.env.production
+.env.test
