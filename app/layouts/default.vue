@@ -19,7 +19,7 @@ const callToActionSlice = {
     ctas: [
       {
         text: "Contact Us",
-        url: "https://yesbhautikx.co.in/get-a-quote/",
+        url: "https://submits.ybxlabs.com/form/nkD7UE79",
       },
     ],
   },
