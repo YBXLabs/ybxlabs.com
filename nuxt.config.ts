@@ -61,8 +61,13 @@ export default defineNuxtConfig({
   
   // Add runtime config for head management
   runtimeConfig: {
+    // Private keys (only available on the server-side)
+    razorpayKeyId: process.env.RAZORPAY_KEY_ID,
+    razorpayKeySecret: process.env.RAZORPAY_KEY_SECRET,
+    
+    // Public keys (exposed to the client-side)
     public: {
-      siteUrl: process.env.NUXT_PUBLIC_SITE_URL || 'http://localhost:3000'
+      siteUrl: process.env.NUXT_PUBLIC_APP_URL || 'http://localhost:3000'
     }
   }
 })
