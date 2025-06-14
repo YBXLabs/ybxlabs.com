@@ -14,9 +14,29 @@ export default defineEventHandler(async (event) => {
 
     const config = useRuntimeConfig()
     
+    // Debug logging for environment variables
+    console.log('Environment Debug:', {
+      hasKeyId: !!config.razorpayKeyId,
+      hasKeySecret: !!config.razorpayKeySecret,
+      keyIdLength: config.razorpayKeyId?.length || 0,
+      keySecretLength: config.razorpayKeySecret?.length || 0,
+      nodeEnv: process.env.NODE_ENV
+    })
+
+    if (!config.razorpayKeyId || !config.razorpayKeySecret) {
+      console.error('Missing Razorpay credentials:', {
+        keyId: !!config.razorpayKeyId,
+        keySecret: !!config.razorpayKeySecret
+      })
+      throw createError({
+        statusCode: 500,
+        statusMessage: 'Payment gateway not configured'
+      })
+    }
+    
     const razorpay = new Razorpay({
-      key_id: config.razorpayKeyId!,
-      key_secret: config.razorpayKeySecret!,
+      key_id: config.razorpayKeyId,
+      key_secret: config.razorpayKeySecret,
     })
 
     const options = {
