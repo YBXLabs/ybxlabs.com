@@ -38,6 +38,8 @@
     "wrangler": "^3.108.1"
   },
   "dependencies": {
-    "gsap": "^3.12.7"
+    "crypto": "^1.0.1",
+    "gsap": "^3.12.7",
+    "razorpay": "^2.9.6"
   }
 }
