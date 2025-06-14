@@ -48,11 +48,11 @@ export default defineEventHandler(async (event) => {
       method: payment.method,
       created_at: payment.created_at
     }
-  } catch (error) {
+  } catch (error: any) {
     console.error('Payment verification error:', error)
     throw createError({
       statusCode: 500,
-      statusMessage: 'Payment verification failed'
+      statusMessage: 'Payment verification failed: ' + (error.message || 'Unknown error')
     })
   }
 }) 

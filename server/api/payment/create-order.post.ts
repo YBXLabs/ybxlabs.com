@@ -14,9 +14,21 @@ export default defineEventHandler(async (event) => {
 
     const config = useRuntimeConfig()
     
+    // Check if environment variables are set
+    if (!config.razorpayKeyId || !config.razorpayKeySecret) {
+      console.error('Razorpay credentials missing:', {
+        keyId: config.razorpayKeyId ? 'Set' : 'Missing',
+        keySecret: config.razorpayKeySecret ? 'Set' : 'Missing'
+      })
+      throw createError({
+        statusCode: 500,
+        statusMessage: 'Payment gateway configuration error'
+      })
+    }
+
     const razorpay = new Razorpay({
-      key_id: config.razorpayKeyId!,
-      key_secret: config.razorpayKeySecret!,
+      key_id: config.razorpayKeyId,
+      key_secret: config.razorpayKeySecret,
     })
 
     const options = {
@@ -35,11 +47,17 @@ export default defineEventHandler(async (event) => {
       currency: order.currency,
       key_id: config.razorpayKeyId
     }
-  } catch (error) {
+  } catch (error: any) {
     console.error('Payment order creation error:', error)
+    
+    // More detailed error handling
+    if (error.statusCode) {
+      throw error // Re-throw if it's already a createError
+    }
+    
     throw createError({
       statusCode: 500,
-      statusMessage: 'Failed to create payment order'
+      statusMessage: 'Failed to create payment order: ' + (error.message || 'Unknown error')
     })
   }
 }) 
