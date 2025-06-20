@@ -31,7 +31,7 @@
               class="pay-button"
             >
               <span v-if="loading">
-                <template v-if="gateway === 'phonepe'">Loading PhonePe...</template>
+                <template v-if="gateway === 'phonepe'">Loading PhonePe Payment...</template>
                 <template v-else>Processing...</template>
               </span>
               <span v-else>Pay {{ formattedAmount }} via {{ gateway === 'phonepe' ? 'PhonePe' : 'Razorpay' }}</span>
@@ -194,6 +194,12 @@ const loadRazorpayScript = () => {
 // Load PhonePe script
 const loadPhonePeScript = () => {
   return new Promise((resolve) => {
+    // Check if script is already loaded
+    if ((window as any).PhonePeCheckout) {
+      resolve(true)
+      return
+    }
+    
     const script = document.createElement('script')
     script.src = 'https://mercury.phonepe.com/web/bundle/checkout.js'
     script.onload = () => resolve(true)
@@ -212,8 +218,8 @@ const initiatePayment = async () => {
     if (gateway.value === 'phonepe' && currency.value === 'INR') {
       console.log('Starting PhonePe payment flow...')
       
-      // Quick bypass for iFrame issues - set to true to skip iFrame and go straight to redirect
-      const forceRedirectMode = true
+      // Enable iFrame mode for in-website payment experience
+      const forceRedirectMode = false
       
       // Create PhonePe order first
       console.log('Creating PhonePe order...')
@@ -248,7 +254,7 @@ const initiatePayment = async () => {
 
       // Add timeout to prevent getting stuck
       const timeoutPromise = new Promise((_, reject) => {
-        setTimeout(() => reject(new Error('PhonePe initialization timeout')), 10000) // 10 second timeout
+        setTimeout(() => reject(new Error('PhonePe initialization timeout')), 15000) // 15 second timeout
       })
 
       try {
@@ -263,47 +269,42 @@ const initiatePayment = async () => {
               console.log('PhonePe script loaded successfully')
               
               // Wait a bit for the script to initialize
-              await new Promise(resolve => setTimeout(resolve, 2000))
+              await new Promise(resolve => setTimeout(resolve, 1000))
               
               const phonepeCheckout = (window as any).PhonePeCheckout
               console.log('PhonePeCheckout available:', !!phonepeCheckout)
-              console.log('Window PhonePe objects:', Object.keys(window).filter(key => key.toLowerCase().includes('phone')))
               
               if (phonepeCheckout && typeof phonepeCheckout.transact === 'function') {
                 console.log('Attempting PhonePe iFrame mode...')
                 
-                // Extract token from redirect URL for iFrame mode
-                const urlParams = new URLSearchParams(orderData.redirect_url.split('?')[1])
-                const paymentToken = urlParams.get('token')
+                // Use the redirect URL as tokenUrl for iFrame mode
+                const tokenUrl = orderData.redirect_url
+                console.log('Using tokenUrl:', tokenUrl)
                 
-                console.log('Payment token extracted:', !!paymentToken)
-                console.log('Redirect URL:', orderData.redirect_url)
-                
-                if (paymentToken) {
-                  console.log('Starting PhonePe transact with token')
+                // Define callback function for payment completion
+                const callback = (response: string) => {
+                  console.log('PhonePe payment callback:', response)
                   
-                  // Configure PhonePe payment options for iFrame mode
-                  phonepeCheckout.transact({
-                    token: paymentToken,
-                    onSuccess: async (response: any) => {
-                      console.log('PhonePe payment success:', response)
-                      await verifyPhonePePayment()
-                    },
-                    onError: (error: any) => {
-                      console.error('PhonePe payment error:', error)
-                      error.value = 'Payment failed. Please try again.'
-                      loading.value = false
-                    },
-                    onClose: () => {
-                      console.log('PhonePe payment modal closed')
-                      loading.value = false
-                    }
-                  })
-                  return true // Success
-                } else {
-                  console.warn('No payment token found in redirect URL')
-                  return false
+                  if (response === 'USER_CANCEL') {
+                    console.log('User cancelled payment')
+                    error.value = 'Payment cancelled by user'
+                    loading.value = false
+                  } else if (response === 'CONCLUDED') {
+                    console.log('Payment concluded, verifying...')
+                    // Payment completed (success or failure), verify the status
+                    verifyPhonePePayment()
+                  }
                 }
+                
+                // Configure PhonePe payment options for iFrame mode
+                phonepeCheckout.transact({
+                  tokenUrl: tokenUrl,
+                  callback: callback,
+                  type: 'IFRAME'
+                })
+                
+                console.log('PhonePe iFrame mode initiated successfully')
+                return true // Success
               } else {
                 console.warn('PhonePeCheckout.transact not available')
                 return false
@@ -317,7 +318,7 @@ const initiatePayment = async () => {
         ])
         
         // If we reach here, iFrame worked
-        console.log('PhonePe iFrame mode initiated successfully')
+        console.log('PhonePe iFrame integration completed')
         return
         
       } catch (timeoutOrError) {

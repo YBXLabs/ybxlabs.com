@@ -70,7 +70,7 @@ export default defineEventHandler(async (event) => {
         type: 'PG_CHECKOUT',
         message: `Payment of ₹${amount} for YBX Labs`,
         merchantUrls: {
-          redirectUrl: `${config.public.siteUrl}/payment/phonepe-success`
+          redirectUrl: `${config.public.siteUrl}/payment/success`
         }
       }
     }

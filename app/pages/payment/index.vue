@@ -91,51 +91,7 @@
                 </div>
               </div>
 
-              <!-- Payment Gateway Selection (only for INR) -->
-              <div v-if="isINRCurrency" class="input-group">
-                <label class="input-label">Payment Gateway</label>
-                <div class="gateway-selection">
-                  <div class="gateway-options">
-                    <label class="gateway-option" :class="{ 'selected': selectedGateway === 'razorpay' }">
-                      <input 
-                        type="radio" 
-                        name="gateway" 
-                        value="razorpay" 
-                        v-model="selectedGateway"
-                        class="gateway-radio"
-                      />
-                      <div class="gateway-content">
-                        <div class="gateway-logo">
-                          <Icon name="material-symbols:payment" class="gateway-icon razorpay-color" />
-                        </div>
-                        <div class="gateway-info">
-                          <div class="gateway-name">Razorpay</div>
-                          <div class="gateway-description">Cards, UPI, Net Banking & More</div>
-                        </div>
-                      </div>
-                    </label>
-                    
-                    <label class="gateway-option" :class="{ 'selected': selectedGateway === 'phonepe' }">
-                      <input 
-                        type="radio" 
-                        name="gateway" 
-                        value="phonepe" 
-                        v-model="selectedGateway"
-                        class="gateway-radio"
-                      />
-                      <div class="gateway-content">
-                        <div class="gateway-logo">
-                          <Icon name="simple-icons:phonepe" class="gateway-icon phonepe-color" />
-                        </div>
-                        <div class="gateway-info">
-                          <div class="gateway-name">PhonePe</div>
-                          <div class="gateway-description">UPI, Cards & Digital Wallet</div>
-                        </div>
-                      </div>
-                    </label>
-                  </div>
-                </div>
-              </div>
+              <!-- Gateway selection will be shown in next step for INR -->
 
               <!-- Payment Preview -->
               <div v-if="amount && !amountError" class="payment-preview">
@@ -147,7 +103,7 @@
                     {{ formattedAmount }}
                   </div>
                   <div class="preview-description">
-                    You will be charged {{ formattedAmount }} via {{ isINRCurrency ? (selectedGateway === 'phonepe' ? 'PhonePe' : 'Razorpay') : 'Razorpay' }}
+                    You will be charged {{ formattedAmount }}{{ isINRCurrency ? '' : ' via Razorpay' }}
                   </div>
                 </div>
               </div>
@@ -194,7 +150,7 @@
             <!-- Security Notice -->
             <div class="security-notice">
               <Icon name="ph:shield-check" class="security-icon" />
-              <span>Secure payment powered by Razorpay</span>
+              <span>Secure payment processing</span>
             </div>
           </div>
         </div>
@@ -220,7 +176,6 @@ const router = useRouter()
 // Form data
 const amount = ref('')
 const selectedCurrency = ref('INR')
-const selectedGateway = ref('razorpay')
 const loading = ref(false)
 const amountError = ref('')
 const currencySearch = ref('')
@@ -403,8 +358,7 @@ const isFormValid = computed(() => {
   return amount.value && 
          parseFloat(amount.value) > 0 && 
          parseFloat(amount.value) <= 100000 && 
-         selectedCurrency.value && 
-         selectedGateway.value &&
+         selectedCurrency.value &&
          !amountError.value
 })
 
@@ -468,11 +422,16 @@ const proceedToPayment = () => {
   
   loading.value = true
   
-  // Navigate to payment processing page with gateway info
   const paymentAmount = parseFloat(amount.value)
-  const paymentUrl = `/payment/${paymentAmount}${selectedCurrency.value}?gateway=${selectedGateway.value}`
   
-  router.push(paymentUrl)
+  if (isINRCurrency.value) {
+    // For INR: Go to gateway selection step
+    router.push(`/payment/gateway-selection?amount=${paymentAmount}&currency=${selectedCurrency.value}`)
+  } else {
+    // For non-INR: Go directly to Razorpay payment
+    const paymentUrl = `/payment/${paymentAmount}${selectedCurrency.value}?gateway=razorpay`
+    router.push(paymentUrl)
+  }
 }
 
 // Go to homepage
@@ -1100,121 +1059,7 @@ useHead({
   color: #059669;
 }
 
-/* Gateway Selection Styles */
-.gateway-selection {
-  margin-top: 8px;
-}
-
-.gateway-options {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.gateway-option {
-  position: relative;
-  display: block;
-  cursor: pointer;
-  border: 2px solid rgba(102, 126, 234, 0.2);
-  border-radius: 12px;
-  padding: 16px;
-  background: rgba(255, 255, 255, 0.8);
-  backdrop-filter: blur(10px);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  overflow: hidden;
-}
-
-.gateway-option:hover {
-  border-color: rgba(102, 126, 234, 0.4);
-  background: rgba(255, 255, 255, 0.9);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.15);
-}
-
-.gateway-option.selected {
-  border-color: #667eea;
-  background: linear-gradient(135deg, rgba(102, 126, 234, 0.08) 0%, rgba(118, 75, 162, 0.08) 100%);
-  box-shadow: 0 8px 32px rgba(102, 126, 234, 0.2);
-}
-
-.gateway-option.selected::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(135deg, rgba(102, 126, 234, 0.03) 0%, rgba(118, 75, 162, 0.03) 100%);
-  pointer-events: none;
-}
-
-.gateway-radio {
-  position: absolute;
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
-
-.gateway-content {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  position: relative;
-  z-index: 1;
-}
-
-.gateway-logo {
-  flex-shrink: 0;
-  width: 48px;
-  height: 48px;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(255, 255, 255, 0.9);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-.gateway-icon {
-  width: 28px;
-  height: 28px;
-}
-
-.razorpay-color {
-  color: #3395ff;
-}
-
-.phonepe-color {
-  color: #5f259f;
-}
-
-.gateway-info {
-  flex: 1;
-}
-
-.gateway-name {
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: #1e293b;
-  margin-bottom: 4px;
-  letter-spacing: 0.025em;
-}
-
-.gateway-description {
-  font-size: 0.875rem;
-  color: #64748b;
-  font-weight: 500;
-  opacity: 0.8;
-}
-
-.gateway-option.selected .gateway-name {
-  color: #667eea;
-}
-
-.gateway-option.selected .gateway-description {
-  color: #4c1d95;
-  opacity: 0.9;
-}
+/* Removed gateway selection styles - now on separate page */
 
 @media (max-width: 640px) {
   .payment-overlay {
@@ -1270,28 +1115,6 @@ useHead({
   .quick-amount-btn {
     padding: 10px 8px;
     font-size: 0.75rem;
-  }
-  
-  .gateway-content {
-    gap: 12px;
-  }
-  
-  .gateway-logo {
-    width: 40px;
-    height: 40px;
-  }
-  
-  .gateway-icon {
-    width: 24px;
-    height: 24px;
-  }
-  
-  .gateway-name {
-    font-size: 1rem;
-  }
-  
-  .gateway-description {
-    font-size: 0.8rem;
   }
 }
 </style> 
