@@ -22,7 +22,7 @@
             
             <div class="payment-details">
               <p class="payment-description">You are about to pay {{ formattedAmount }}</p>
-              <p class="secure-text">🔒 Secure payment powered by Razorpay</p>
+              <p class="secure-text">🔒 Secure payment powered by {{ gateway === 'phonepe' ? 'PhonePe' : 'Razorpay' }}</p>
             </div>
 
             <button 
@@ -30,8 +30,11 @@
               :disabled="loading"
               class="pay-button"
             >
-              <span v-if="loading">Processing...</span>
-              <span v-else>Pay {{ formattedAmount }}</span>
+              <span v-if="loading">
+                <template v-if="gateway === 'phonepe'">Loading PhonePe...</template>
+                <template v-else>Processing...</template>
+              </span>
+              <span v-else>Pay {{ formattedAmount }} via {{ gateway === 'phonepe' ? 'PhonePe' : 'Razorpay' }}</span>
             </button>
 
             <div v-if="error" class="error-message">
@@ -97,12 +100,15 @@ interface PaymentDetails {
 const route = useRoute()
 const router = useRouter()
 
-// Extract amount from URL parameter
+// Extract amount and gateway from URL
 const amountParam = Array.isArray(route.params.amount) 
   ? route.params.amount[0] || ''
   : route.params.amount || ''
+const gatewayParam = route.query.gateway as string || 'razorpay'
+
 const amount = ref(0)
 const currency = ref('INR')
+const gateway = ref(gatewayParam)
 const loading = ref(false)
 const error = ref('')
 const showThankYou = ref(false)
@@ -185,12 +191,151 @@ const loadRazorpayScript = () => {
   })
 }
 
+// Load PhonePe script
+const loadPhonePeScript = () => {
+  return new Promise((resolve) => {
+    const script = document.createElement('script')
+    script.src = 'https://mercury.phonepe.com/web/bundle/checkout.js'
+    script.onload = () => resolve(true)
+    script.onerror = () => resolve(false)
+    document.body.appendChild(script)
+  })
+}
+
 // Initiate payment process
 const initiatePayment = async () => {
   try {
     loading.value = true
     error.value = ''
 
+    // Handle PhonePe payment flow
+    if (gateway.value === 'phonepe' && currency.value === 'INR') {
+      console.log('Starting PhonePe payment flow...')
+      
+      // Quick bypass for iFrame issues - set to true to skip iFrame and go straight to redirect
+      const forceRedirectMode = true
+      
+      // Create PhonePe order first
+      console.log('Creating PhonePe order...')
+      const orderData = await $fetch('/api/payment/create-order', {
+        method: 'POST',
+        body: {
+          amount: amount.value,
+          currency: currency.value,
+          gateway: 'phonepe'
+        }
+      }) as any
+
+      if (!orderData.success) {
+        throw new Error('Failed to create PhonePe payment order')
+      }
+
+      console.log('PhonePe order created:', orderData)
+
+      // Store access token for verification
+      sessionStorage.setItem('phonepe_access_token', orderData.access_token)
+      sessionStorage.setItem('phonepe_merchant_order_id', orderData.merchant_order_id)
+
+      // Skip iFrame attempt if force redirect mode is enabled
+      if (forceRedirectMode) {
+        console.log('Force redirect mode enabled, skipping iFrame attempt')
+        // Give user feedback before redirect
+        error.value = 'Redirecting to PhonePe...'
+        await new Promise(resolve => setTimeout(resolve, 1000))
+        window.location.href = orderData.redirect_url
+        return
+      }
+
+      // Add timeout to prevent getting stuck
+      const timeoutPromise = new Promise((_, reject) => {
+        setTimeout(() => reject(new Error('PhonePe initialization timeout')), 10000) // 10 second timeout
+      })
+
+      try {
+        // Try to load PhonePe script and use iFrame mode with timeout
+        console.log('Loading PhonePe script...')
+        
+        await Promise.race([
+          (async () => {
+            const phonepeScriptLoaded = await loadPhonePeScript()
+            
+            if (phonepeScriptLoaded) {
+              console.log('PhonePe script loaded successfully')
+              
+              // Wait a bit for the script to initialize
+              await new Promise(resolve => setTimeout(resolve, 2000))
+              
+              const phonepeCheckout = (window as any).PhonePeCheckout
+              console.log('PhonePeCheckout available:', !!phonepeCheckout)
+              console.log('Window PhonePe objects:', Object.keys(window).filter(key => key.toLowerCase().includes('phone')))
+              
+              if (phonepeCheckout && typeof phonepeCheckout.transact === 'function') {
+                console.log('Attempting PhonePe iFrame mode...')
+                
+                // Extract token from redirect URL for iFrame mode
+                const urlParams = new URLSearchParams(orderData.redirect_url.split('?')[1])
+                const paymentToken = urlParams.get('token')
+                
+                console.log('Payment token extracted:', !!paymentToken)
+                console.log('Redirect URL:', orderData.redirect_url)
+                
+                if (paymentToken) {
+                  console.log('Starting PhonePe transact with token')
+                  
+                  // Configure PhonePe payment options for iFrame mode
+                  phonepeCheckout.transact({
+                    token: paymentToken,
+                    onSuccess: async (response: any) => {
+                      console.log('PhonePe payment success:', response)
+                      await verifyPhonePePayment()
+                    },
+                    onError: (error: any) => {
+                      console.error('PhonePe payment error:', error)
+                      error.value = 'Payment failed. Please try again.'
+                      loading.value = false
+                    },
+                    onClose: () => {
+                      console.log('PhonePe payment modal closed')
+                      loading.value = false
+                    }
+                  })
+                  return true // Success
+                } else {
+                  console.warn('No payment token found in redirect URL')
+                  return false
+                }
+              } else {
+                console.warn('PhonePeCheckout.transact not available')
+                return false
+              }
+            } else {
+              console.warn('Failed to load PhonePe script')
+              return false
+            }
+          })(),
+          timeoutPromise
+        ])
+        
+        // If we reach here, iFrame worked
+        console.log('PhonePe iFrame mode initiated successfully')
+        return
+        
+      } catch (timeoutOrError) {
+        console.warn('PhonePe iFrame mode failed or timed out:', timeoutOrError)
+      }
+
+      // Fallback: Use traditional redirect mode  
+      console.log('Falling back to PhonePe redirect mode')
+      
+      // Give user feedback before redirect
+      error.value = 'Redirecting to PhonePe...'
+      await new Promise(resolve => setTimeout(resolve, 1000))
+      
+      window.location.href = orderData.redirect_url
+      return
+    }
+
+    // Handle Razorpay payment flow (existing logic)
     // Load Razorpay script
     const scriptLoaded = await loadRazorpayScript()
     if (!scriptLoaded) {
@@ -202,7 +347,8 @@ const initiatePayment = async () => {
       method: 'POST',
       body: {
         amount: amount.value,
-        currency: currency.value
+        currency: currency.value,
+        gateway: 'razorpay'
       }
     }) as any
 
@@ -242,12 +388,51 @@ const initiatePayment = async () => {
   }
 }
 
-// Verify payment
-const verifyPayment = async (response: any) => {
+// Verify PhonePe payment specifically
+const verifyPhonePePayment = async () => {
   try {
+    const accessToken = sessionStorage.getItem('phonepe_access_token')
+    const merchantOrderId = sessionStorage.getItem('phonepe_merchant_order_id')
+
+    if (!accessToken || !merchantOrderId) {
+      throw new Error('PhonePe payment session expired')
+    }
+
     const verificationData = await $fetch('/api/payment/verify', {
       method: 'POST',
       body: {
+        gateway: 'phonepe',
+        merchantOrderId,
+        accessToken
+      }
+    }) as any
+
+    // Clear stored data
+    sessionStorage.removeItem('phonepe_access_token')
+    sessionStorage.removeItem('phonepe_merchant_order_id')
+
+    if (verificationData.success) {
+      paymentDetails.value = verificationData
+      showThankYou.value = true
+    } else {
+      throw new Error('Payment verification failed')
+    }
+  } catch (err: any) {
+    console.error('PhonePe payment verification error:', err)
+    error.value = err.message || 'Payment verification failed'
+  } finally {
+    loading.value = false
+  }
+}
+
+// Verify payment (for Razorpay)
+const verifyPayment = async (response?: any) => {
+  try {
+    // Handle Razorpay verification
+    const verificationData = await $fetch('/api/payment/verify', {
+      method: 'POST',
+      body: {
+        gateway: 'razorpay',
         razorpay_order_id: response.razorpay_order_id,
         razorpay_payment_id: response.razorpay_payment_id,
         razorpay_signature: response.razorpay_signature
@@ -278,12 +463,13 @@ const goToPayments = () => {
   router.push('/payment')
 }
 
-// Dynamic SEO - watch for changes in amount and currency
-watch([amount, currency], () => {
+// Dynamic SEO - watch for changes in amount, currency, and gateway
+watch([amount, currency, gateway], () => {
+  const gatewayName = gateway.value === 'phonepe' ? 'PhonePe' : 'Razorpay'
   useHead({
     title: `Pay ${formattedAmount.value} - YBX Labs`,
     meta: [
-      { name: 'description', content: `Secure payment of ${formattedAmount.value} via Razorpay` }
+      { name: 'description', content: `Secure payment of ${formattedAmount.value} via ${gatewayName}` }
     ]
   })
 }, { immediate: true })

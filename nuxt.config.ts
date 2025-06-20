@@ -64,6 +64,9 @@ export default defineNuxtConfig({
     // Private keys (only available on the server-side)
     razorpayKeyId: process.env.RAZORPAY_KEY_ID || process.env.NUXT_RAZORPAY_KEY_ID,
     razorpayKeySecret: process.env.RAZORPAY_KEY_SECRET || process.env.NUXT_RAZORPAY_KEY_SECRET,
+    // PhonePe credentials
+    phonepeClientId: process.env.PHONEPE_CLIENT_ID || process.env.NUXT_PHONEPE_CLIENT_ID,
+    phonepeApiKey: process.env.PHONEPE_API_KEY || process.env.NUXT_PHONEPE_API_KEY,
     
     // Public keys (exposed to the client-side)
     public: {
