@@ -70,7 +70,10 @@ export default defineNuxtConfig({
     
     // Public keys (exposed to the client-side)
     public: {
-      siteUrl: process.env.NUXT_PUBLIC_APP_URL || 'http://localhost:3000'
+      siteUrl: process.env.NUXT_PUBLIC_APP_URL || 
+               process.env.NODE_ENV === 'production' 
+                 ? 'https://ybxlabs.com'  // Replace with your actual domain
+                 : 'http://localhost:3000'
     }
   }
 }) 
