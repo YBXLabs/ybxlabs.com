@@ -19,8 +19,8 @@ const callToActionSlice = {
     ctas: [
       {
         text: "Contact Us",
-        // url: "https://submits.ybxlabs.com/form/nkD7UE79",
-        url: "https://ybxlabs.com/contact-us",
+        url: "https://submits.ybxlabs.com/form/nkD7UE79",
+        // url: "https://ybxlabs.com/contact-us",
 
       },
     ],
