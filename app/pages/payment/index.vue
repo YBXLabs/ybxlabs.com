@@ -508,17 +508,20 @@ useHead({
 <style scoped>
 .payment-setup-container {
   min-height: 100vh;
+  min-height: 100dvh; /* Dynamic viewport height for mobile */
   position: relative;
   user-select: none;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
+  overflow-x: hidden;
 }
 
 .payment-background {
   min-height: 100vh;
+  min-height: 100dvh; /* Dynamic viewport height for mobile */
   width: 100%;
-  position: fixed;
+  position: absolute; /* Changed from fixed to absolute for mobile compatibility */
   top: 0;
   left: 0;
   z-index: 1;
@@ -527,6 +530,7 @@ useHead({
 
 .payment-overlay {
   min-height: 100vh;
+  min-height: 100dvh; /* Dynamic viewport height for mobile */
   width: 100%;
   background: rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(8px);
@@ -536,6 +540,8 @@ useHead({
   position: relative;
   z-index: 2;
   padding: 24px;
+  overflow-y: auto; /* Enable scrolling for mobile */
+  -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
 }
 
 .payment-form-container {
@@ -1062,13 +1068,31 @@ useHead({
 /* Removed gateway selection styles - now on separate page */
 
 @media (max-width: 640px) {
+  .payment-setup-container {
+    min-height: 100vh;
+    min-height: 100dvh;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  
   .payment-overlay {
     padding: 12px;
+    align-items: flex-start; /* Changed from center to flex-start for mobile */
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
+  
+  .payment-form-container {
+    width: 100%;
+    max-width: none;
   }
   
   .payment-form {
     padding: 24px 20px;
     border-radius: 16px;
+    margin: 0 auto;
+    max-height: none;
+    overflow: visible;
   }
   
   .form-header {
@@ -1081,6 +1105,14 @@ useHead({
   
   .input-group {
     margin-bottom: 16px;
+  }
+  
+  .currency-dropdown {
+    max-height: 240px; /* Reduced max height for mobile */
+  }
+  
+  .currency-options {
+    max-height: 180px; /* Reduced max height for mobile */
   }
   
   .payment-preview {

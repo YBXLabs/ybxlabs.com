@@ -122,13 +122,13 @@ const parseAmount = (param: string) => {
   }
   
   const match = param.match(/^(\d+(?:\.\d+)?)([A-Z]{3})?$/i)
-  if (match) {
+  if (match && match[1]) {
     amount.value = parseFloat(match[1])
     currency.value = match[2]?.toUpperCase() || 'INR'
   } else {
     // Fallback: try to extract just the number
     const numMatch = param.match(/\d+(?:\.\d+)?/)
-    if (numMatch) {
+    if (numMatch && numMatch[0]) {
       amount.value = parseFloat(numMatch[0])
     } else {
       error.value = 'Invalid amount format'
@@ -479,13 +479,16 @@ watch([amount, currency, gateway], () => {
 <style scoped>
 .payment-container {
   min-height: 100vh;
+  min-height: 100dvh; /* Dynamic viewport height for mobile */
   position: relative;
+  overflow-x: hidden;
 }
 
 .payment-background {
   min-height: 100vh;
+  min-height: 100dvh; /* Dynamic viewport height for mobile */
   width: 100%;
-  position: fixed;
+  position: absolute; /* Changed from fixed to absolute for mobile compatibility */
   top: 0;
   left: 0;
   z-index: 1;
@@ -493,6 +496,7 @@ watch([amount, currency, gateway], () => {
 
 .payment-overlay {
   min-height: 100vh;
+  min-height: 100dvh; /* Dynamic viewport height for mobile */
   width: 100%;
   background: rgba(0, 0, 0, 0.5);
   display: flex;
@@ -501,6 +505,8 @@ watch([amount, currency, gateway], () => {
   position: relative;
   z-index: 2;
   padding: 20px;
+  overflow-y: auto; /* Enable scrolling for mobile */
+  -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
 }
 
 .payment-form-container,
@@ -644,9 +650,32 @@ watch([amount, currency, gateway], () => {
 }
 
 @media (max-width: 640px) {
+  .payment-container {
+    min-height: 100vh;
+    min-height: 100dvh;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  .payment-overlay {
+    align-items: flex-start; /* Changed from center to flex-start for mobile */
+    padding: 12px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
+  
+  .payment-form-container,
+  .thank-you-container {
+    width: 100%;
+    max-width: none;
+  }
+  
   .payment-form,
   .thank-you-content {
     padding: 30px 20px;
+    margin: 0 auto;
+    max-height: none;
+    overflow: visible;
   }
   
   .amount-text {

@@ -180,13 +180,16 @@ useHead({
 <style scoped>
 .gateway-selection-container {
   min-height: 100vh;
+  min-height: 100dvh; /* Dynamic viewport height for mobile */
   position: relative;
+  overflow-x: hidden;
 }
 
 .payment-background {
   min-height: 100vh;
+  min-height: 100dvh; /* Dynamic viewport height for mobile */
   width: 100%;
-  position: fixed;
+  position: absolute; /* Changed from fixed to absolute for mobile compatibility */
   top: 0;
   left: 0;
   z-index: 1;
@@ -194,6 +197,7 @@ useHead({
 
 .payment-overlay {
   min-height: 100vh;
+  min-height: 100dvh; /* Dynamic viewport height for mobile */
   width: 100%;
   background: rgba(0, 0, 0, 0.5);
   display: flex;
@@ -202,6 +206,8 @@ useHead({
   position: relative;
   z-index: 2;
   padding: 20px;
+  overflow-y: auto; /* Enable scrolling for mobile */
+  -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
 }
 
 .gateway-form-container {
@@ -430,8 +436,30 @@ useHead({
 }
 
 @media (max-width: 640px) {
+  .gateway-selection-container {
+    min-height: 100vh;
+    min-height: 100dvh;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  .payment-overlay {
+    align-items: flex-start; /* Changed from center to flex-start for mobile */
+    padding: 12px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
+  
+  .gateway-form-container {
+    width: 100%;
+    max-width: none;
+  }
+  
   .gateway-form {
     padding: 30px 20px;
+    margin: 0 auto;
+    max-height: none;
+    overflow: visible;
   }
   
   .form-title {
