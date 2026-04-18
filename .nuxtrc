@@ -1,1 +1,1 @@
-hub.workers=true
+setups.@nuxtjs/prismic="5.2.1"
