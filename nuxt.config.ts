@@ -32,7 +32,6 @@ export default defineNuxtConfig({
     '@nuxtjs/tailwindcss',
     '@nuxt/fonts',
     '@nuxt/icon',
-    '@nuxthub/core',
   ],
 
   prismic: {
