@@ -3,9 +3,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
 import type { Content } from "@prismicio/client";
 
-// The array passed to `getSliceComponentProps` is purely optional.
-// Consider it as a visual hint for you when templating your slice.
-defineProps(
+const props = defineProps(
   getSliceComponentProps<Content.ShowcaseSlice>([
     "slice",
     "index",
@@ -13,6 +11,25 @@ defineProps(
     "context",
   ]),
 );
+
+const allImages = computed(() => {
+  const imgs: any[] = [];
+  if (props.slice.primary.image?.url) {
+    imgs.push(props.slice.primary.image);
+  }
+  if (props.slice.items?.length) {
+    for (const item of props.slice.items) {
+      if ((item as any).gallery_image?.url) {
+        imgs.push((item as any).gallery_image);
+      }
+    }
+  }
+  return imgs;
+});
+
+const hasMultiple = computed(() => allImages.value.length > 1);
+const currentIdx = ref(0);
+let interval: ReturnType<typeof setInterval> | null = null;
 
 onMounted(() => {
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce').matches;
@@ -23,9 +40,7 @@ onMounted(() => {
 
   gsap.fromTo(
     '.showcase__heading',
-    {
-      y: 100
-    },
+    { y: 100 },
     {
       y: 0,
       ease: 'power2.inOut',
@@ -40,10 +55,7 @@ onMounted(() => {
 
   gsap.fromTo(
     '.showcase__glow',
-    {
-      scale: 0.7,
-      opacity: 0.1
-    },
+    { scale: 0.7, opacity: 0.1 },
     {
       scale: 1,
       opacity: 1,
@@ -56,6 +68,16 @@ onMounted(() => {
       }
     }
   );
+
+  if (hasMultiple.value) {
+    interval = setInterval(() => {
+      currentIdx.value = (currentIdx.value + 1) % allImages.value.length;
+    }, 4000);
+  }
+});
+
+onUnmounted(() => {
+  if (interval) clearInterval(interval);
 });
 </script>
 
@@ -89,11 +111,40 @@ onMounted(() => {
         />
         <PrismicLink :field="slice.primary.cta" class="buttonLink mt-6" />
       </div>
-      <PrismicImage
-        :field="slice.primary.image"
-        class="opacity-90 shadow-2xl lg:col-span-2 lg:pt-0"
+
+      <!-- Image carousel -->
+      <div
+        class="relative overflow-hidden lg:col-span-2 lg:pt-0"
         :class="slice.variation === 'reversed' ? 'lg:order-1 lg:translate-x-[15%]' : 'lg:-order-1 lg:translate-x-[-15%]'"
-      />
+      >
+        <template v-if="hasMultiple">
+          <TransitionGroup name="showcase-fade">
+            <SmartImage
+              v-for="(img, idx) in allImages"
+              v-show="idx === currentIdx"
+              :key="img.url"
+              :field="img"
+              class="w-full opacity-90 shadow-2xl"
+            />
+          </TransitionGroup>
+        </template>
+        <SmartImage
+          v-else-if="allImages.length === 1"
+          :field="allImages[0]"
+          class="w-full opacity-90 shadow-2xl"
+        />
+
+        <!-- Dots indicator -->
+        <div v-if="hasMultiple" class="mt-4 flex items-center justify-center gap-1.5">
+          <button
+            v-for="(_, idx) in allImages"
+            :key="idx"
+            class="h-1.5 rounded-full transition-all duration-300"
+            :class="idx === currentIdx ? 'w-5 bg-teal-400' : 'w-1.5 bg-gray-600'"
+            @click="currentIdx = idx"
+          />
+        </div>
+      </div>
     </div>
   </Bounded>
 </template>
@@ -108,5 +159,18 @@ onMounted(() => {
   background-position: center;
   opacity: 0.15;
   mask-image: radial-gradient(circle at 60% 50%, black 10%, transparent 40%);
+}
+
+.showcase-fade-enter-active,
+.showcase-fade-leave-active {
+  transition: opacity 0.6s ease;
+}
+.showcase-fade-enter-from,
+.showcase-fade-leave-to {
+  opacity: 0;
+}
+.showcase-fade-leave-active {
+  position: absolute;
+  inset: 0;
 }
 </style>

@@ -2,9 +2,7 @@
 import gsap from "gsap";
 import type { Content } from "@prismicio/client";
 
-// The array passed to `getSliceComponentProps` is purely optional.
-// Consider it as a visual hint for you when templating your slice.
-defineProps(
+const props = defineProps(
   getSliceComponentProps<Content.HeroSlice>([
     "slice",
     "index",
@@ -12,6 +10,25 @@ defineProps(
     "context",
   ])
 );
+
+const allImages = computed(() => {
+  const imgs: any[] = [];
+  if (props.slice.primary.image?.url) {
+    imgs.push(props.slice.primary.image);
+  }
+  if (props.slice.items?.length) {
+    for (const item of props.slice.items) {
+      if ((item as any).gallery_image?.url) {
+        imgs.push((item as any).gallery_image);
+      }
+    }
+  }
+  return imgs;
+});
+
+const hasMultiple = computed(() => allImages.value.length > 1);
+const currentIdx = ref(0);
+let interval: ReturnType<typeof setInterval> | null = null;
 
 onMounted(() => {
   const prefersReducedMotion = window.matchMedia(
@@ -86,6 +103,16 @@ onMounted(() => {
       { top: "33%", left: "0%", duration: 3 },
     ],
   });
+
+  if (hasMultiple.value) {
+    interval = setInterval(() => {
+      currentIdx.value = (currentIdx.value + 1) % allImages.value.length;
+    }, 4000);
+  }
+});
+
+onUnmounted(() => {
+  if (interval) clearInterval(interval);
 });
 </script>
 
@@ -121,8 +148,52 @@ onMounted(() => {
         <div
           class="hero__glow hero__glow--two absolute left-0 top-1/3 -z-10 h-2/3 w-2/3 bg-teal-600/50 opacity-0 mix-blend-screen blur-3xl filter md:blur-[120px]"
         />
-        <PrismicImage class="rounded-lg" :field="slice.primary.image" />
+
+        <!-- Image carousel -->
+        <div class="relative">
+          <template v-if="hasMultiple">
+            <TransitionGroup name="hero-fade">
+              <SmartImage
+                v-for="(img, idx) in allImages"
+                v-show="idx === currentIdx"
+                :key="img.url"
+                :field="img"
+                class="rounded-lg"
+              />
+            </TransitionGroup>
+
+            <div class="absolute -bottom-8 left-1/2 flex -translate-x-1/2 items-center gap-1.5">
+              <button
+                v-for="(_, idx) in allImages"
+                :key="idx"
+                class="h-1.5 rounded-full transition-all duration-300"
+                :class="idx === currentIdx ? 'w-5 bg-teal-400' : 'w-1.5 bg-gray-600'"
+                @click="currentIdx = idx"
+              />
+            </div>
+          </template>
+          <SmartImage
+            v-else-if="allImages.length"
+            :field="allImages[0]"
+            class="rounded-lg"
+          />
+        </div>
       </div>
     </div>
   </Bounded>
 </template>
+
+<style scoped>
+.hero-fade-enter-active,
+.hero-fade-leave-active {
+  transition: opacity 0.6s ease;
+}
+.hero-fade-enter-from,
+.hero-fade-leave-to {
+  opacity: 0;
+}
+.hero-fade-leave-active {
+  position: absolute;
+  inset: 0;
+}
+</style>
