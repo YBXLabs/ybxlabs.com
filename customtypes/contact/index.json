@@ -1,0 +1,107 @@
+{
+  "format": "custom",
+  "id": "contact",
+  "label": "Contact Page",
+  "repeatable": false,
+  "status": true,
+  "json": {
+    "Main": {
+      "heading": {
+        "type": "Text",
+        "config": {
+          "label": "Heading",
+          "placeholder": "Contact Us"
+        }
+      },
+      "subtitle": {
+        "type": "Text",
+        "config": {
+          "label": "Subtitle",
+          "placeholder": "Have a project in mind?"
+        }
+      },
+      "email": {
+        "type": "Text",
+        "config": {
+          "label": "Contact Email",
+          "placeholder": "hello@ybxlabs.com"
+        }
+      },
+      "telegram_handle": {
+        "type": "Text",
+        "config": {
+          "label": "Telegram Handle",
+          "placeholder": "@yesbhautik"
+        }
+      },
+      "telegram_url": {
+        "type": "Link",
+        "config": {
+          "label": "Telegram URL",
+          "placeholder": "https://t.me/yesbhautik",
+          "select": null,
+          "allowTargetBlank": true
+        }
+      },
+      "response_time_text": {
+        "type": "Text",
+        "config": {
+          "label": "Response Time Text",
+          "placeholder": "We typically respond within 24 hours on business days."
+        }
+      },
+      "social_links": {
+        "type": "Group",
+        "config": {
+          "label": "Social Links",
+          "fields": {
+            "platform_name": {
+              "type": "Text",
+              "config": {
+                "label": "Platform Name",
+                "placeholder": "Twitter"
+              }
+            },
+            "platform_icon": {
+              "type": "Text",
+              "config": {
+                "label": "Icon ID (iconify format)",
+                "placeholder": "simple-icons:x"
+              }
+            },
+            "platform_url": {
+              "type": "Link",
+              "config": {
+                "label": "Platform URL",
+                "placeholder": "",
+                "select": null,
+                "allowTargetBlank": true
+              }
+            }
+          }
+        }
+      },
+      "address_text": {
+        "type": "Text",
+        "config": {
+          "label": "Address (hidden in UI)",
+          "placeholder": "YBX Labs Private Limited · Gujarat, India"
+        }
+      },
+      "meta_title": {
+        "type": "Text",
+        "config": {
+          "label": "Meta Title",
+          "placeholder": "Contact Us | YBX Labs"
+        }
+      },
+      "meta_description": {
+        "type": "Text",
+        "config": {
+          "label": "Meta Description",
+          "placeholder": "Get in touch with the YBX Labs team."
+        }
+      }
+    }
+  }
+}

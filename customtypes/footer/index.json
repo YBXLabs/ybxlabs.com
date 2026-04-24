@@ -1,0 +1,125 @@
+{
+  "format": "custom",
+  "id": "footer",
+  "label": "Footer",
+  "repeatable": false,
+  "status": true,
+  "json": {
+    "Main": {
+      "brand_name": {
+        "type": "Text",
+        "config": {
+          "label": "Brand Name",
+          "placeholder": "YBX Labs Private Limited"
+        }
+      },
+      "tagline": {
+        "type": "Text",
+        "config": {
+          "label": "Tagline",
+          "placeholder": "Building digital experiences that matter"
+        }
+      },
+      "registration_number": {
+        "type": "Text",
+        "config": {
+          "label": "Registration Number",
+          "placeholder": "CIN: U12345MH2024PTC123456"
+        }
+      },
+      "copyright_text": {
+        "type": "Text",
+        "config": {
+          "label": "Copyright Text",
+          "placeholder": "All rights reserved."
+        }
+      },
+      "footer_links": {
+        "type": "Group",
+        "config": {
+          "label": "Footer Links",
+          "fields": {
+            "group_name": {
+              "type": "Text",
+              "config": {
+                "label": "Group Name",
+                "placeholder": "Company"
+              }
+            },
+            "link_label": {
+              "type": "Text",
+              "config": {
+                "label": "Link Label",
+                "placeholder": "About Us"
+              }
+            },
+            "link_url": {
+              "type": "Link",
+              "config": {
+                "label": "Link URL",
+                "placeholder": "",
+                "select": null,
+                "allowTargetBlank": true
+              }
+            }
+          }
+        }
+      },
+      "social_links": {
+        "type": "Group",
+        "config": {
+          "label": "Social Links",
+          "fields": {
+            "platform_name": {
+              "type": "Text",
+              "config": {
+                "label": "Platform Name",
+                "placeholder": "Twitter"
+              }
+            },
+            "platform_icon": {
+              "type": "Text",
+              "config": {
+                "label": "Icon ID",
+                "placeholder": "simple-icons:x"
+              }
+            },
+            "platform_url": {
+              "type": "Link",
+              "config": {
+                "label": "Platform URL",
+                "placeholder": "",
+                "select": null,
+                "allowTargetBlank": true
+              }
+            }
+          }
+        }
+      },
+      "bottom_links": {
+        "type": "Group",
+        "config": {
+          "label": "Bottom Bar Links",
+          "fields": {
+            "label": {
+              "type": "Text",
+              "config": {
+                "label": "Label",
+                "placeholder": "Privacy Policy"
+              }
+            },
+            "url": {
+              "type": "Link",
+              "config": {
+                "label": "URL",
+                "placeholder": "",
+                "select": null,
+                "allowTargetBlank": true
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

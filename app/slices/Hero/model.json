@@ -50,7 +50,16 @@
           }
         }
       },
-      "items": {}
+      "items": {
+        "gallery_image": {
+          "type": "Image",
+          "config": {
+            "label": "Gallery Image",
+            "constraint": {},
+            "thumbnails": []
+          }
+        }
+      }
     }
   ]
 }

@@ -48,5 +48,6 @@ useSeoMeta({
         :slices="[]"
       />
     </div>
+    <AppFooter />
   </div>
 </template>

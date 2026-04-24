@@ -32,7 +32,12 @@ export default defineNuxtConfig({
     '@nuxtjs/tailwindcss',
     '@nuxt/fonts',
     '@nuxt/icon',
+    '@nuxtjs/turnstile',
   ],
+
+  turnstile: {
+    siteKey: process.env.NUXT_TURNSTILE_SITE_KEY || '',
+  },
 
   prismic: {
     endpoint: repositoryName,
@@ -66,7 +71,12 @@ export default defineNuxtConfig({
     // PhonePe credentials
     phonepeClientId: process.env.PHONEPE_CLIENT_ID || process.env.NUXT_PHONEPE_CLIENT_ID,
     phonepeApiKey: process.env.PHONEPE_API_KEY || process.env.NUXT_PHONEPE_API_KEY,
-    
+    // Resend
+    resendApiKey: process.env.RESEND_API_KEY,
+    contactEmailTo: process.env.CONTACT_EMAIL_TO || 'hello@ybxlabs.com',
+    contactEmailFrom: process.env.CONTACT_EMAIL_FROM || 'website@ybxlabs.com',
+    // Turnstile secret (server-side only)
+    turnstile: { secretKey: process.env.NUXT_TURNSTILE_SECRET_KEY || '' },
     // Public keys (exposed to the client-side)
     public: {
       siteUrl: process.env.NUXT_PUBLIC_APP_URL || 

@@ -1,0 +1,144 @@
+{
+  "id": "footer",
+  "type": "SharedSlice",
+  "name": "Footer",
+  "description": "Site footer with brand info, navigation columns, social links, and legal notices",
+  "variations": [
+    {
+      "id": "default",
+      "name": "Default",
+      "docURL": "...",
+      "version": "initial",
+      "description": "Full footer with navigation columns, social links, and legal info",
+      "imageUrl": "",
+      "primary": {
+        "brand_name": {
+          "type": "Text",
+          "config": {
+            "label": "Brand Name",
+            "placeholder": "YBX Labs Private Limited"
+          }
+        },
+        "tagline": {
+          "type": "Text",
+          "config": {
+            "label": "Tagline",
+            "placeholder": "Building digital experiences that matter"
+          }
+        },
+        "registration_number": {
+          "type": "Text",
+          "config": {
+            "label": "Registration / CIN Number",
+            "placeholder": "CIN: U12345MH2024PTC123456"
+          }
+        },
+        "copyright_text": {
+          "type": "Text",
+          "config": {
+            "label": "Copyright Text",
+            "placeholder": "All rights reserved."
+          }
+        },
+        "nav_column_1_title": {
+          "type": "Text",
+          "config": {
+            "label": "Nav Column 1 Title",
+            "placeholder": "Company"
+          }
+        },
+        "nav_column_1_links": {
+          "type": "Link",
+          "config": {
+            "label": "Nav Column 1 Links",
+            "placeholder": "",
+            "select": null,
+            "allowTargetBlank": true,
+            "allowText": true,
+            "repeat": true
+          }
+        },
+        "nav_column_2_title": {
+          "type": "Text",
+          "config": {
+            "label": "Nav Column 2 Title",
+            "placeholder": "Services"
+          }
+        },
+        "nav_column_2_links": {
+          "type": "Link",
+          "config": {
+            "label": "Nav Column 2 Links",
+            "placeholder": "",
+            "select": null,
+            "allowTargetBlank": true,
+            "allowText": true,
+            "repeat": true
+          }
+        },
+        "nav_column_3_title": {
+          "type": "Text",
+          "config": {
+            "label": "Nav Column 3 Title",
+            "placeholder": "Legal"
+          }
+        },
+        "nav_column_3_links": {
+          "type": "Link",
+          "config": {
+            "label": "Nav Column 3 Links",
+            "placeholder": "",
+            "select": null,
+            "allowTargetBlank": true,
+            "allowText": true,
+            "repeat": true
+          }
+        },
+        "social_links": {
+          "type": "Group",
+          "config": {
+            "label": "Social Links",
+            "repeat": true,
+            "fields": {
+              "platform_name": {
+                "type": "Text",
+                "config": {
+                  "label": "Platform Name",
+                  "placeholder": "Twitter"
+                }
+              },
+              "platform_icon": {
+                "type": "Text",
+                "config": {
+                  "label": "Icon ID",
+                  "placeholder": "simple-icons:x"
+                }
+              },
+              "platform_url": {
+                "type": "Link",
+                "config": {
+                  "label": "Platform URL",
+                  "placeholder": "",
+                  "select": null,
+                  "allowTargetBlank": true
+                }
+              }
+            }
+          }
+        },
+        "bottom_links": {
+          "type": "Link",
+          "config": {
+            "label": "Bottom Bar Links",
+            "placeholder": "",
+            "select": null,
+            "allowTargetBlank": true,
+            "allowText": true,
+            "repeat": true
+          }
+        }
+      },
+      "items": {}
+    }
+  ]
+}

@@ -1,0 +1,161 @@
+{
+  "format": "custom",
+  "id": "careers",
+  "label": "Careers Page",
+  "repeatable": false,
+  "status": true,
+  "json": {
+    "Main": {
+      "heading": {
+        "type": "Text",
+        "config": {
+          "label": "Heading",
+          "placeholder": "Careers"
+        }
+      },
+      "subtitle": {
+        "type": "Text",
+        "config": {
+          "label": "Subtitle",
+          "placeholder": "Build the future with us."
+        }
+      },
+      "perks": {
+        "type": "Group",
+        "config": {
+          "label": "Perks / Highlights",
+          "fields": {
+            "icon": {
+              "type": "Text",
+              "config": {
+                "label": "Icon ID (iconify format)",
+                "placeholder": "ph:globe-simple-duotone"
+              }
+            },
+            "title": {
+              "type": "Text",
+              "config": {
+                "label": "Title",
+                "placeholder": "Remote-first"
+              }
+            },
+            "description": {
+              "type": "Text",
+              "config": {
+                "label": "Short Description",
+                "placeholder": "Work from anywhere, flexible hours."
+              }
+            }
+          }
+        }
+      },
+      "job_openings": {
+        "type": "Group",
+        "config": {
+          "label": "Job Openings",
+          "fields": {
+            "job_title": {
+              "type": "Text",
+              "config": {
+                "label": "Job Title",
+                "placeholder": "Senior Full-Stack Engineer"
+              }
+            },
+            "department": {
+              "type": "Text",
+              "config": {
+                "label": "Department",
+                "placeholder": "Engineering"
+              }
+            },
+            "location": {
+              "type": "Text",
+              "config": {
+                "label": "Location",
+                "placeholder": "Remote / India"
+              }
+            },
+            "employment_type": {
+              "type": "Select",
+              "config": {
+                "label": "Employment Type",
+                "placeholder": "",
+                "options": ["Full-time", "Part-time", "Contract", "Internship"],
+                "default_value": "Full-time"
+              }
+            },
+            "experience": {
+              "type": "Text",
+              "config": {
+                "label": "Experience Level",
+                "placeholder": "3-5 years"
+              }
+            },
+            "job_description": {
+              "type": "StructuredText",
+              "config": {
+                "label": "Job Description",
+                "placeholder": "Describe the role, responsibilities, and requirements...",
+                "allowTargetBlank": true,
+                "multi": "paragraph,heading2,heading3,strong,em,list-item,o-list-item"
+              }
+            },
+            "is_active": {
+              "type": "Boolean",
+              "config": {
+                "label": "Active?",
+                "default_value": true,
+                "placeholder_false": "Closed",
+                "placeholder_true": "Open"
+              }
+            }
+          }
+        }
+      },
+      "telegram_handle": {
+        "type": "Text",
+        "config": {
+          "label": "Applications Telegram Handle",
+          "placeholder": "@yesbhautik"
+        }
+      },
+      "telegram_url": {
+        "type": "Link",
+        "config": {
+          "label": "Applications Telegram URL",
+          "placeholder": "https://t.me/yesbhautik",
+          "select": null,
+          "allowTargetBlank": true
+        }
+      },
+      "careers_email": {
+        "type": "Text",
+        "config": {
+          "label": "Careers Email",
+          "placeholder": "careers@ybxlabs.com"
+        }
+      },
+      "open_application_text": {
+        "type": "Text",
+        "config": {
+          "label": "Open Application Text",
+          "placeholder": "We're always open to hearing from exceptional people."
+        }
+      },
+      "meta_title": {
+        "type": "Text",
+        "config": {
+          "label": "Meta Title",
+          "placeholder": "Careers | YBX Labs"
+        }
+      },
+      "meta_description": {
+        "type": "Text",
+        "config": {
+          "label": "Meta Description",
+          "placeholder": "Join the YBX Labs team."
+        }
+      }
+    }
+  }
+}
