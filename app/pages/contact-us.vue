@@ -219,8 +219,39 @@ async function copyToClipboard(text: string, field: string) {
               </div>
             </div>
 
+            <!-- Phone & Address — only shown when toggle is ON (for verification) -->
+            <div v-if="d?.show_contact_details">
+              <!-- Phone -->
+              <div v-if="d?.phone_number" class="mb-5">
+                <h3 class="text-sm font-semibold uppercase tracking-widest text-gray-400">Phone</h3>
+                <button
+                  class="group mt-2 flex items-center gap-2 text-lg text-white transition-colors hover:text-teal-300"
+                  @click="copyToClipboard(d.phone_number, 'phone')"
+                >
+                  <span>{{ d.phone_number }}</span>
+                  <Icon
+                    :name="copiedField === 'phone' ? 'ph:check-bold' : 'ph:copy'"
+                    class="h-4 w-4 text-gray-600 transition-colors group-hover:text-teal-400"
+                    :class="{ '!text-teal-400': copiedField === 'phone' }"
+                  />
+                </button>
+                <p v-if="copiedField === 'phone'" class="mt-1 text-xs text-teal-500">Copied!</p>
+              </div>
+
+              <!-- Address -->
+              <div v-if="d?.address" class="mb-5">
+                <h3 class="text-sm font-semibold uppercase tracking-widest text-gray-400">Address</h3>
+                <div class="mt-2 text-lg leading-relaxed text-white">
+                  <PrismicRichText :field="d.address" />
+                </div>
+              </div>
+            </div>
+
+            <!-- Divider -->
+            <div class="h-px bg-gray-800"></div>
+
             <!-- Response Time -->
-            <div v-if="d?.response_time_text">
+            <div v-if="d?.response_time_text" class="pt-2">
               <h3 class="text-sm font-semibold uppercase tracking-widest text-gray-400">Response Time</h3>
               <p class="mt-2 text-sm text-gray-500">{{ d.response_time_text }}</p>
             </div>

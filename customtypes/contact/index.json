@@ -88,6 +88,31 @@
           "placeholder": "YBX Labs Private Limited · Gujarat, India"
         }
       },
+      "show_contact_details": {
+        "type": "Boolean",
+        "config": {
+          "label": "Show Phone & Address on Page?",
+          "default_value": false,
+          "placeholder_false": "Hide (normal mode)",
+          "placeholder_true": "Show (for verification)"
+        }
+      },
+      "phone_number": {
+        "type": "Text",
+        "config": {
+          "label": "Phone Number",
+          "placeholder": "+91 XXXXX XXXXX"
+        }
+      },
+      "address": {
+        "type": "StructuredText",
+        "config": {
+          "label": "Address (for display)",
+          "placeholder": "Full address for website verification...",
+          "allowTargetBlank": true,
+          "multi": "paragraph"
+        }
+      },
       "meta_title": {
         "type": "Text",
         "config": {
